@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Service Desk Manager</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --accent: #06b6d4;
+            --bg: #0f172a;
+            --bg-card: #1e293b;
+            --text: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border: #334155;
+            --success: #10b981;
+            --error: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Background Effects */
+        .bg-gradient {
+            position: fixed;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(99, 102, 241, 0.15), transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(6, 182, 212, 0.15), transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(168, 85, 247, 0.1), transparent 50%);
+            animation: rotate 20s linear infinite;
+            z-index: 0;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none;
+            opacity: 0.5;
+            z-index: 1;
+        }
+
+        /* Login Container */
+        .login-container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 480px;
+            padding: 20px;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .login-card {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 48px;
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.5),
+                0 0 0 1px rgba(99, 102, 241, 0.1);
+        }
+
+        .logo-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 900;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            font-family: 'Space Mono', monospace;
+        }
+
+        /* Form */
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 1.25rem;
+            pointer-events: none;
+        }
+
+        input {
+            width: 100%;
+            padding: 16px 16px 16px 50px;
+            background: rgba(15, 23, 42, 0.5);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            color: var(--text);
+            font-size: 1rem;
+            font-family: 'Montserrat', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: rgba(15, 23, 42, 0.8);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+        }
+
+        input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1.25rem;
+            transition: color 0.3s;
+        }
+
+        .toggle-password:hover {
+            color: var(--primary);
+        }
+
+        .error-message {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--error);
+            color: var(--error);
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.875rem;
+            animation: shake 0.4s;
+        }
+
+        .error-message.show {
+            display: flex;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-login::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-login:hover::before {
+            left: 100%;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-login:active {
+            transform: translateY(0);
+        }
+
+        .btn-login:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .login-footer {
+            margin-top: 32px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            font-family: 'Space Mono', monospace;
+        }
+
+        .help-text {
+            margin-top: 8px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* Responsivo */
+        @media (max-width: 480px) {
+            .login-card {
+                padding: 32px 24px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+    <div class="noise"></div>
+
+    <div class="login-container">
+        <div class="login-card">
+            <div class="logo-section">
+                <div class="logo">
+                    <i class="bi bi-building-gear"></i>
+                </div>
+                <h1>Service Desk</h1>
+                <p class="subtitle">Multi-Tenant Manager</p>
+            </div>
+
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="tenant-slug">Empresa</label>
+                    <div class="input-wrapper">
+                        <i class="bi bi-building input-icon"></i>
+                        <input 
+                            type="text" 
+                            id="tenant-slug" 
+                            name="tenant-slug" 
+                            placeholder="identificador-da-empresa"
+                            required
+                            autocomplete="organization"
+                        >
+                    </div>
+                    <p class="help-text">Ex: bugbusters, acme-corp</p>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <div class="input-wrapper">
+                        <i class="bi bi-envelope-fill input-icon"></i>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email" 
+                            placeholder="seu@email.com"
+                            required
+                            autocomplete="email"
+                        >
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Senha</label>
+                    <div class="input-wrapper">
+                        <i class="bi bi-lock-fill input-icon"></i>
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password" 
+                            placeholder="••••••••"
+                            required
+                            autocomplete="current-password"
+                        >
+                        <button type="button" class="toggle-password" id="togglePassword">
+                            <i class="bi bi-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="error-message" id="error-message">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                    <span id="error-text"></span>
+                </div>
+
+                <button type="submit" class="btn-login" id="btn-login">
+                    <i class="bi bi-box-arrow-in-right"></i>
+                    <span>Entrar</span>
+                </button>
+            </form>
+
+            <div class="login-footer">
+                <p>Service Desk Multi-Tenant v2.0</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="tenant-login.js"></script>
+</body>
+</html>
