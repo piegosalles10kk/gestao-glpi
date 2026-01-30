@@ -14,6 +14,7 @@ const entidadeRoutes = require('./src/routes/entidadeRoutes');
 const authRoutes = require('./src/routes/authRoutes');
 const configRoutes = require('./src/routes/configRoutes');
 const tenantRoutes = require('./src/routes/tenantRoutes');
+const adminRoutes = require('./src/routes/adminRoutes');
 
 const app = express();
 
@@ -36,11 +37,14 @@ app.use('/api/glpi', glpiRoutes);
 app.use('/api/cargos', cargoRoutes);
 app.use('/api/entidades-config', entidadeRoutes);
 app.use('/api/tenant', tenantRoutes);
+app.use('/api/admin', adminRoutes);  // Nova rota admin
 
 // 5. Rota de Fallback
 app.use((req, res, next) => {
     if (req.url.startsWith('/api')) {
         return res.status(404).json({ message: "Rota de API não encontrada" });
+    }if (!req.url.startsWith('/admin-dashboard.html')) {
+        return res.status(404).sendFile(path.join(__dirname, 'view', 'admin-login.html'));
     }
     res.sendFile(path.join(__dirname, 'view', 'tenant-login.html'));
 });
@@ -51,4 +55,5 @@ app.listen(PORT, () => {
     console.log(`🚀 Servidor rodando com sucesso!`);
     console.log(`🔗 Link: http://172.16.50.19:${PORT}`);
     console.log(`📊 Multi-Tenant Dashboard disponível`);
+    console.log(`🔐 Admin Dashboard: http://172.16.50.19:${PORT}/admin-dashboard.html`);
 });

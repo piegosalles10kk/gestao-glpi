@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - MCP Service Desk</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="admin-dashboard.css">
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="bi bi-shield-check"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>MCP Admin</h1>
+                    <span>Service Desk Manager</span>
+                </div>
+            </div>
+        </div>
+
+        <nav class="nav-menu">
+            <a href="#" class="nav-item active" data-view="overview">
+                <i class="bi bi-grid"></i>
+                <span>Visão Geral</span>
+            </a>
+            <a href="#" class="nav-item" data-view="tenants">
+                <i class="bi bi-building"></i>
+                <span>Tenants</span>
+            </a>
+            <a href="#" class="nav-item" data-view="plans">
+                <i class="bi bi-layers"></i>
+                <span>Planos</span>
+            </a>
+            <a href="#" class="nav-item" data-view="settings">
+                <i class="bi bi-gear"></i>
+                <span>Configurações</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="user-info">
+                <div class="user-avatar">
+                    <i class="bi bi-person-circle"></i>
+                </div>
+                <div class="user-details">
+                    <p class="user-name" id="admin-name">Administrador</p>
+                    <p class="user-role">Super Admin</p>
+                </div>
+            </div>
+            <button class="btn-logout" id="btn-logout">
+                <i class="bi bi-box-arrow-right"></i>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Overview View -->
+        <section id="view-overview" class="view-section active">
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">Visão Geral</h1>
+                    <p class="page-subtitle">Painel de controle do sistema</p>
+                </div>
+                <button class="btn btn-primary" id="btn-refresh-stats">
+                    <i class="bi bi-arrow-clockwise"></i>
+                    Atualizar
+                </button>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span class="stat-label">Total de Tenants</span>
+                        <div class="stat-icon blue">
+                            <i class="bi bi-building"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value" id="stat-total-tenants">0</div>
+                    <div class="stat-footer">
+                        <span class="stat-change positive">
+                            <i class="bi bi-arrow-up"></i> 12% este mês
+                        </span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span class="stat-label">Tenants Ativos</span>
+                        <div class="stat-icon green">
+                            <i class="bi bi-check-circle"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value" id="stat-active-tenants">0</div>
+                    <div class="stat-footer">
+                        <span class="stat-change positive">
+                            <i class="bi bi-arrow-up"></i> 8% este mês
+                        </span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span class="stat-label">Receita Mensal</span>
+                        <div class="stat-icon purple">
+                            <i class="bi bi-currency-dollar"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value" id="stat-revenue">R$ 0,00</div>
+                    <div class="stat-footer">
+                        <span class="stat-change positive">
+                            <i class="bi bi-arrow-up"></i> 23% este mês
+                        </span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-header">
+                        <span class="stat-label">Planos Ativos</span>
+                        <div class="stat-icon orange">
+                            <i class="bi bi-layers"></i>
+                        </div>
+                    </div>
+                    <div class="stat-value" id="stat-total-plans">0</div>
+                    <div class="stat-footer">
+                        <span class="stat-change neutral">
+                            Estável
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="section-card">
+                <div class="card-header">
+                    <h2 class="card-title">Atividade Recente</h2>
+                    <button class="btn btn-secondary btn-sm">
+                        Ver Tudo
+                    </button>
+                </div>
+                <div class="activity-list" id="recent-activity">
+                    <div class="activity-item">
+                        <div class="activity-icon blue">
+                            <i class="bi bi-plus-circle"></i>
+                        </div>
+                        <div class="activity-content">
+                            <p class="activity-title">Novo tenant criado</p>
+                            <p class="activity-time">Há 2 horas</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tenants View -->
+        <section id="view-tenants" class="view-section">
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">Gerenciar Tenants</h1>
+                    <p class="page-subtitle">Controle de empresas cadastradas</p>
+                </div>
+                <button class="btn btn-primary" id="btn-create-tenant">
+                    <i class="bi bi-plus-lg"></i>
+                    Novo Tenant
+                </button>
+            </div>
+
+            <!-- Tenants Table -->
+            <div class="section-card">
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Empresa</th>
+                                <th>Slug</th>
+                                <th>Plano</th>
+                                <th>Status</th>
+                                <th>Valor</th>
+                                <th>Criado em</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tenants-table-body">
+                            <tr>
+                                <td colspan="7" class="text-center">
+                                    <div class="loading-state">
+                                        <i class="bi bi-hourglass-split"></i>
+                                        Carregando tenants...
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Plans View -->
+        <section id="view-plans" class="view-section">
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">Planos e Pacotes</h1>
+                    <p class="page-subtitle">Gerenciar planos disponíveis</p>
+                </div>
+                <button class="btn btn-primary" id="btn-create-plan">
+                    <i class="bi bi-plus-lg"></i>
+                    Novo Plano
+                </button>
+            </div>
+
+            <!-- Plans Grid -->
+            <div class="plans-grid" id="plans-grid">
+                <div class="loading-state">
+                    <i class="bi bi-hourglass-split"></i>
+                    Carregando planos...
+                </div>
+            </div>
+        </section>
+
+        <!-- Settings View -->
+        <section id="view-settings" class="view-section">
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">Configurações do Sistema</h1>
+                    <p class="page-subtitle">Configurações globais e integrações</p>
+                </div>
+            </div>
+
+            <div class="settings-grid">
+                <!-- Mercado Pago -->
+                <div class="section-card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <i class="bi bi-credit-card"></i>
+                            Mercado Pago
+                        </h2>
+                        <label class="switch">
+                            <input type="checkbox" id="mercadopago-enabled">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label>Access Token</label>
+                            <input type="password" id="mp-access-token" placeholder="APP_USR-...">
+                        </div>
+                        <div class="form-group">
+                            <label>Public Key</label>
+                            <input type="text" id="mp-public-key" placeholder="APP_USR-...">
+                        </div>
+                        <div class="form-group">
+                            <label>Webhook URL</label>
+                            <input type="text" id="mp-webhook-url" placeholder="https://...">
+                        </div>
+                        <div class="button-group">
+                            <button class="btn btn-secondary" id="btn-test-mp">
+                                <i class="bi bi-wifi"></i>
+                                Testar Conexão
+                            </button>
+                            <button class="btn btn-primary" id="btn-save-mp">
+                                <i class="bi bi-check-lg"></i>
+                                Salvar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- App Settings -->
+                <div class="section-card">
+                    <div class="card-header">
+                        <h2 class="card-title">
+                            <i class="bi bi-gear"></i>
+                            Configurações Gerais
+                        </h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label>Nome da Aplicação</label>
+                            <input type="text" id="app-name" placeholder="MCP Service Desk">
+                        </div>
+                        <div class="form-group">
+                            <label>URL da Aplicação</label>
+                            <input type="text" id="app-url" placeholder="http://172.16.50.19:2600">
+                        </div>
+                        <button class="btn btn-primary w-full" id="btn-save-general">
+                            <i class="bi bi-check-lg"></i>
+                            Salvar Configurações
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal: Create/Edit Tenant -->
+    <div class="modal-overlay" id="modal-tenant">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="modal-tenant-title">Novo Tenant</h2>
+                <button class="modal-close" onclick="closeModal('modal-tenant')">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="form-tenant">
+                    <input type="hidden" id="tenant-id">
+                    
+                    <div class="form-section">
+                        <h3 class="form-section-title">Informações da Empresa</h3>
+                        
+                        <div class="form-group">
+                            <label>Nome da Empresa *</label>
+                            <input type="text" id="tenant-nome" required placeholder="Bug Busters LTDA">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Slug (Identificador) *</label>
+                            <input type="text" id="tenant-slug" required placeholder="bugbusters">
+                            <small>Usado na URL: bugbusters.seudominio.com</small>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3 class="form-section-title">Plano e Cobrança</h3>
+                        
+                        <div class="form-group">
+                            <label>Selecionar Plano *</label>
+                            <select id="tenant-plan" required>
+                                <option value="">Carregando...</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Valor Mensal Customizado (Opcional)</label>
+                            <input type="number" id="tenant-custom-valor" placeholder="99.90" step="0.01" min="0">
+                            <small>Deixe vazio para usar o valor do plano. Use 0 para grátis.</small>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3 class="form-section-title">Configurações GLPI</h3>
+                        
+                        <div class="form-group">
+                            <label>URL da API GLPI *</label>
+                            <input type="url" id="tenant-glpi-url" required placeholder="https://glpi.exemplo.com/apirest.php">
+                        </div>
+
+                        <div class="form-group">
+                            <label>App Token *</label>
+                            <input type="text" id="tenant-glpi-token" required>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Usuário GLPI *</label>
+                                <input type="text" id="tenant-glpi-login" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Senha GLPI *</label>
+                                <input type="password" id="tenant-glpi-password" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3 class="form-section-title">Administrador do Tenant</h3>
+                        
+                        <div class="form-group">
+                            <label>Nome do Admin *</label>
+                            <input type="text" id="tenant-admin-nome" required>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Email do Admin *</label>
+                                <input type="email" id="tenant-admin-email" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Senha do Admin *</label>
+                                <input type="password" id="tenant-admin-password" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('modal-tenant')">
+                            Cancelar
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-lg"></i>
+                            Criar Tenant
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Create/Edit Plan -->
+    <div class="modal-overlay" id="modal-plan">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="modal-plan-title">Novo Plano</h2>
+                <button class="modal-close" onclick="closeModal('modal-plan')">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="form-plan">
+                    <input type="hidden" id="plan-id">
+                    
+                    <div class="form-group">
+                        <label>Nome do Plano *</label>
+                        <input type="text" id="plan-nome" required placeholder="Básico">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Descrição</label>
+                        <textarea id="plan-descricao" rows="3" placeholder="Ideal para pequenas equipes..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Valor Mensal (R$) *</label>
+                        <input type="number" id="plan-valor" required step="0.01" min="0" placeholder="99.90">
+                    </div>
+
+                    <div class="form-section">
+                        <h3 class="form-section-title">Recursos do Plano</h3>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Máx. Usuários</label>
+                                <input type="number" id="plan-max-users" value="5" min="1">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Máx. Técnicos</label>
+                                <input type="number" id="plan-max-techs" value="10" min="1">
+                            </div>
+                        </div>
+
+                        <div class="features-checklist">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="plan-feat-automation" checked>
+                                <span>Automação de Chamados</span>
+                            </label>
+
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="plan-feat-ia">
+                                <span>Categorização com IA</span>
+                            </label>
+
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="plan-feat-branding">
+                                <span>Marca Personalizada</span>
+                            </label>
+
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="plan-feat-api">
+                                <span>Acesso à API</span>
+                            </label>
+
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="plan-feat-support">
+                                <span>Suporte Prioritário</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="modal-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('modal-plan')">
+                            Cancelar
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-lg"></i>
+                            Salvar Plano
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <script src="admin-dashboard.js"></script>
+</body>
+</html>

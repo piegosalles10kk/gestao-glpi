@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Admin - MCP Service Desk</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #2563eb;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-900: #111827;
+            --error: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 420px;
+        }
+
+        .login-card {
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            overflow: hidden;
+        }
+
+        .login-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            padding: 2.5rem 2rem;
+            text-align: center;
+            color: white;
+        }
+
+        .logo-icon {
+            width: 64px;
+            height: 64px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 1rem;
+        }
+
+        .login-header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .login-header p {
+            font-size: 0.875rem;
+            opacity: 0.9;
+        }
+
+        .login-body {
+            padding: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--gray-700);
+            margin-bottom: 0.5rem;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-600);
+            font-size: 1.125rem;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 3rem;
+            border: 1px solid var(--gray-300);
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--gray-600);
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .error-message {
+            background: #fee2e2;
+            border: 1px solid var(--error);
+            color: var(--error);
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+            display: none;
+            font-size: 0.875rem;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 0.875rem;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            font-size: 0.9375rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-login:hover {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transform: translateY(-1px);
+        }
+
+        .btn-login:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .login-footer {
+            padding: 1.5rem 2rem;
+            background: var(--gray-50);
+            text-align: center;
+            font-size: 0.8125rem;
+            color: var(--gray-600);
+            border-top: 1px solid var(--gray-200);
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="logo-icon">
+                    <i class="bi bi-shield-check"></i>
+                </div>
+                <h1>Admin Dashboard</h1>
+                <p>MCP Service Desk Manager</p>
+            </div>
+
+            <div class="login-body">
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="username">Usuário</label>
+                        <div class="input-wrapper">
+                            <i class="bi bi-person-circle input-icon"></i>
+                            <input 
+                                type="text" 
+                                id="username" 
+                                name="username" 
+                                placeholder="Digite seu usuário"
+                                required
+                                autocomplete="username"
+                            >
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Senha</label>
+                        <div class="input-wrapper">
+                            <i class="bi bi-lock-fill input-icon"></i>
+                            <input 
+                                type="password" 
+                                id="password" 
+                                name="password" 
+                                placeholder="Digite sua senha"
+                                required
+                                autocomplete="current-password"
+                            >
+                            <button type="button" class="toggle-password" id="togglePassword">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="error-message" id="error-message"></div>
+
+                    <button type="submit" class="btn-login" id="btn-login">
+                        Entrar no Dashboard
+                    </button>
+                </form>
+            </div>
+
+            <div class="login-footer">
+                MCP Service Desk - Admin Panel v2.0
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = "http://172.16.50.19:2600/api";
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Verificar se já está logado
+            const token = localStorage.getItem('mcp_token');
+            if (token) {
+                window.location.href = '/admin-dashboard.html';
+            }
+
+            // Toggle de senha
+            const togglePassword = document.getElementById('togglePassword');
+            const passwordInput = document.getElementById('password');
+            
+            togglePassword.addEventListener('click', () => {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                
+                const icon = togglePassword.querySelector('i');
+                icon.classList.toggle('bi-eye');
+                icon.classList.toggle('bi-eye-slash');
+            });
+
+            // Submit do formulário
+            document.getElementById('login-form').addEventListener('submit', handleLogin);
+        });
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const btnLogin = document.getElementById('btn-login');
+            const errorMessage = document.getElementById('error-message');
+            
+            if (!username || !password) {
+                showError('Por favor, preencha todos os campos');
+                return;
+            }
+            
+            btnLogin.disabled = true;
+            btnLogin.textContent = 'Autenticando...';
+            errorMessage.classList.remove('show');
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    localStorage.setItem('mcp_token', data.token);
+                    localStorage.setItem('mcp_user', JSON.stringify(data.user));
+                    window.location.href = '/admin-dashboard.html';
+                } else {
+                    showError(data.message || 'Credenciais inválidas');
+                }
+            } catch (error) {
+                console.error('Erro no login:', error);
+                showError('Erro ao conectar com o servidor');
+            } finally {
+                btnLogin.disabled = false;
+                btnLogin.textContent = 'Entrar no Dashboard';
+            }
+        }
+
+        function showError(message) {
+            const errorMessage = document.getElementById('error-message');
+            errorMessage.textContent = message;
+            errorMessage.classList.add('show');
+            
+            setTimeout(() => {
+                errorMessage.classList.remove('show');
+            }, 5000);
+        }
+    </script>
+</body>
+</html>
